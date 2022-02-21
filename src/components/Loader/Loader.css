@@ -1,0 +1,13 @@
+.LoaderItem {
+  position: fixed;
+  left: 48%;
+  top: 35%;
+  z-index: 1000;
+  background-color: #2c8fe0;
+  border-radius: 50% 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  visibility: visible;
+}

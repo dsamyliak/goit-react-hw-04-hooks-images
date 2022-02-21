@@ -1,0 +1,83 @@
+/*
+ * Стили компонента Searchbar
+ */
+.Searchbar {
+  top: 0;
+  left: 0;
+  position: sticky;
+  z-index: 1100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 64px;
+  padding-right: 24px;
+  padding-left: 24px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  color: #fff;
+  background-color: #2c8fe0;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+    0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+}
+
+/*
+ * Стили компонента SearchForm
+ */
+.SearchForm {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  background-color: #fff;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.SearchForm-button {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  background-image: url("data:image/png;base64,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");
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.6;
+  transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  outline: none;
+}
+
+.SearchForm-button:hover {
+  opacity: 1;
+}
+
+.SearchForm-button-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+  border: 0;
+}
+
+.SearchForm-input {
+  display: inline-block;
+  max-width: 100%;
+  min-width: 500px;
+  font: inherit;
+  font-size: 20px;
+  border: none;
+  outline: none;
+  margin-left: 10px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.SearchForm-input::placeholder {
+  font: inherit;
+  font-size: 18px;
+}
