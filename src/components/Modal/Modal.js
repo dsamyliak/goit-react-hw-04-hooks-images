@@ -1,47 +1,55 @@
-import React, { Component } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import "./Modal.css";
 
 const modalRoot = document.querySelector("#modal-root");
 
-export default class Modal extends Component {
-  componentDidMount() {
+export default function Modal({ showModal, children }) {
+  // componentDidMount() {
+  //   console.log("Modal DidMount");
+
+  //   window.addEventListener("keydown", handleKeyDown);
+  // }
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      console.log("keydown e.code ", e.code);
+
+      if (e.code === "Escape") {
+        showModal();
+      }
+    };
     console.log("Modal DidMount");
 
-    window.addEventListener("keydown", this.handleKeyDown);
-  }
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      console.log("Modal WillUnmount");
 
-  componentDidUpdate() {
-    console.log("Update Modal");
-  }
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
-  componentWillUnmount() {
-    console.log("Modal WillUnmount");
+  // componentDidUpdate() {
+  //   console.log("Update Modal");
+  // }
 
-    window.removeEventListener("keydown", this.handleKeyDown);
-  }
+  // componentWillUnmount() {
+  //   console.log("Modal WillUnmount");
 
-  handleKeyDown = (e) => {
-    console.log("keydown e.code ", e.code);
+  //   window.removeEventListener("keydown", handleKeyDown);
+  // }
 
-    if (e.code === "Escape") {
-      this.props.showModal();
-    }
-  };
-
-  handleBackdropClick = (e) => {
+  const handleBackdropClick = (e) => {
     if (e.currentTarget === e.target) {
       console.log("Pressed to Backdrop!!!");
-      this.props.showModal();
+      showModal();
     }
   };
 
-  render() {
-    return createPortal(
-      <div className="Overlay" onClick={this.handleBackdropClick}>
-        <div className="Modal">{this.props.children}</div>
-      </div>,
-      modalRoot
-    );
-  }
+  return createPortal(
+    <div className="Overlay" onClick={handleBackdropClick}>
+      <div className="Modal">{children}</div>
+    </div>,
+    modalRoot
+  );
 }

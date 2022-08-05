@@ -1,72 +1,75 @@
-import React from "react";
+import { useState } from "react";
 import "./Searchbar.css";
 import { nanoid } from "nanoid";
 import propTypes from "prop-types";
 import { toast } from "react-toastify";
 
-class Searchbar extends React.Component {
-  searchQueryId = nanoid();
+// class Searchbar extends React.Component {
+export default function Searchbar({ onSubmit }) {
+  // searchQueryId = nanoid();
+  const [searchQueryId, setSearchQueryId] = useState(nanoid());
+  const [searchQuery, setSearchQuery] = useState("");
 
-  static propTypes = {
-    state: propTypes.shape({
-      searchQuery: propTypes.string.isRequired,
-    }),
-  };
+  // static propTypes = {
+  //   state: propTypes.shape({
+  //     searchQuery: propTypes.string.isRequired,
+  //   }),
+  // };
 
-  state = {
-    searchQuery: "",
-  };
+  // state = {
+  //   searchQuery: "",
+  // };
 
-  handleInputChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.currentTarget;
-    this.setState({ [name]: value });
+    // this.setState({ [name]: value });
+    setSearchQuery(value);
   };
 
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (this.state.searchQuery.trim() === "") {
+    if (searchQuery.trim() === "") {
       toast.error("Enter name of image!");
       return;
     }
 
-    this.props.onSubmit(this.state.searchQuery.trim().toLowerCase());
-    this.reset();
+    onSubmit(searchQuery.trim().toLowerCase());
+    reset();
   };
 
-  reset = () => {
-    this.setState({
-      searchQuery: "",
-    });
+  const reset = () => {
+    // this.setState({
+    //   searchQuery: "",
+    // });
+    setSearchQuery("");
   };
 
-  render() {
-    return (
-      <header className="Searchbar">
-        <form className="SearchForm" onSubmit={this.handleSubmit}>
-          <button type="submit" className="SearchForm-button">
-            <span className="SearchForm-button-label">Search</span>
-          </button>
-          <label htmlFor={this.searchQueryId}>
-            <input
-              className="SearchForm-input"
-              type="text"
-              autoComplete="off"
-              autoFocus
-              //   pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-              //   title="Name may contain only letters, apostrophe, dash and spaces. For example Cat, Architecture"
-              //   required
-              id={this.searchQueryId}
-              name="searchQuery"
-              value={this.state.searchQuery}
-              onChange={this.handleInputChange}
-              placeholder="Search images and photos"
-            />
-          </label>
-        </form>
-      </header>
-    );
-  }
+  return (
+    <header className="Searchbar">
+      <form className="SearchForm" onSubmit={handleSubmit}>
+        <button type="submit" className="SearchForm-button">
+          <span className="SearchForm-button-label">Search</span>
+        </button>
+        <label htmlFor={searchQueryId}>
+          <input
+            className="SearchForm-input"
+            type="text"
+            autoComplete="off"
+            autoFocus
+            //   pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+            //   title="Name may contain only letters, apostrophe, dash and spaces. For example Cat, Architecture"
+            //   required
+            id={searchQueryId}
+            // name="searchQuery"
+            value={searchQuery}
+            onChange={handleInputChange}
+            placeholder="Search images and photos"
+          />
+        </label>
+      </form>
+    </header>
+  );
 }
 
-export default Searchbar;
+// export default Searchbar;

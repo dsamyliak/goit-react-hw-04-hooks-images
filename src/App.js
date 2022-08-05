@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import "./App.css";
 
 import Loader from "./components/Loader";
@@ -9,15 +9,26 @@ import Modal from "./components/Modal/Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+import { useState, useEffect } from "react";
 
-export default class App extends React.Component {
-  state = {
-    searchQuery: "",
-    imageData: [],
-    page: 1,
-    error: null,
-    showModal: false,
-  };
+// export default class App extends React.Component {
+export default function App() {
+  // state = {
+  //   searchQuery: "",
+  //   imageData: [],
+  //   page: 1,
+  //   error: null,
+  //   showModal: false,
+  // };
+  const [searchQuerySt, setSearchQuerySt] = useState("");
+  const [imageData, setImageData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [largeImageURL, setLargeImageURL] = useState("");
+  const [alt, setAlt] = useState("");
+  const [arrayLength, setArrayLength] = useState(0);
 
   // componentDidMount() {
   //   console.log("App DidMount");
@@ -41,53 +52,83 @@ export default class App extends React.Component {
   //   }
   // };
 
-  componentDidUpdate(prevProps, prevState) {
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log("COMPONENT DIDUPDATE");
+
+  //   const oldQuery = prevState.searchQuery;
+  //   const newQuery = this.state.searchQuery;
+
+  //   if (oldQuery !== newQuery) {
+  //     console.clear();
+  //     this.fetchArray();
+  //   }
+
+  //   const oldPage = prevState.page;
+  //   const newPage = this.state.page;
+
+  //   if (oldPage !== newPage) {
+  //     this.fetchArray();
+  //   }
+  // }
+
+  // componentDidUpdate
+  useEffect(() => {
     console.log("COMPONENT DIDUPDATE");
-
-    const oldQuery = prevState.searchQuery;
-    const newQuery = this.state.searchQuery;
-
-    if (oldQuery !== newQuery) {
-      console.clear();
-      this.fetchArray();
+    if (!searchQuerySt) {
+      return;
     }
+    console.log("searchQuerySt", searchQuerySt);
+    // const oldQuery = prevState.searchQuerySt;
+    // const newQuery = searchQuerySt;
 
-    const oldPage = prevState.page;
-    const newPage = this.state.page;
+    // if (oldQuery !== newQuery) {
+    //   console.clear();
+    //   fetchArray();
+    // }
+    // const oldPage = prevState.page;
+    // const newPage = page;
 
-    if (oldPage !== newPage) {
-      this.fetchArray();
-    }
-  }
+    // if (oldPage !== newPage) {
+    //   fetchArray();
+    // }
+    fetchArray();
+  }, [searchQuerySt, page]);
 
-  formSubmitHandler = (searchQuery) => {
+  const formSubmitHandler = (searchQuery) => {
     console.log("formSubmitHandler");
 
-    if (this.state.searchQuery === searchQuery) {
+    if (searchQuerySt === searchQuery) {
       toast.error("You enter the same word!!! Enter new one!!!", {
         theme: "colored",
         position: "top-right",
       });
+      return;
     }
 
-    if (this.state.searchQuery !== searchQuery) {
-      this.setState({
-        searchQuery: searchQuery,
-        page: 1,
-        imageData: [],
-        error: null,
-        showModal: false,
-      });
-    }
+    setSearchQuerySt(searchQuery);
+    setPage(1);
+    setImageData([]);
+    setError(null);
+    setShowModal(false);
+
+    // if (searchQuerySt !== searchQuery) {
+    //   this.setState({
+    //     searchQuery: searchQuery,
+    //     page: 1,
+    //     imageData: [],
+    //     error: null,
+    //     showModal: false,
+    //   });
+    // }
   };
 
-  fetchArray = () => {
-    const { searchQuery, page } = this.state;
-
-    this.setState({ loading: true });
+  const fetchArray = () => {
+    // const { searchQuery, page } = this.state;
+    // this.setState({ loading: true });
+    setLoading(true);
 
     fetch(
-      `https://pixabay.com/api/?q=${searchQuery}&page=${page}&key=3705719-850a353db1ffe60c326d386e6&image_type=photo&orientation=horizontal&per_page=12`
+      `https://pixabay.com/api/?q=${searchQuerySt}&page=${page}&key=3705719-850a353db1ffe60c326d386e6&image_type=photo&orientation=horizontal&per_page=12`
     )
       .then((response) => {
         if (response.ok) {
@@ -108,49 +149,56 @@ export default class App extends React.Component {
               largeImageURL: largeImageURL,
             })),
           ],
-          arrayLength: data.hits.length,
+          setArrayLength: data.hits.length,
         }));
       })
       .catch((error) => {
-        this.setState({ error });
+        // this.setState({ error });
+        setError({ error });
         toast.error(`${error}`, {
           theme: "colored",
           position: "top-right",
         });
       })
       .finally(() => {
-        this.lastImagesInDB();
-
-        this.setState({ loading: false });
+        lastImagesInDB();
+        // this.setState({ loading: false });
+        setLoading(false);
       });
   };
 
-  loadMoreImages = () => {
-    this.setState((prevState) => ({
-      page: prevState.page + 1,
-    }));
+  const loadMoreImages = (prevState) => {
+    // this.setState((prevState) => ({
+    //   page: prevState.page + 1,
+    // }));
+    setPage(prevState + 1);
 
-    console.log("BUTTON+1 ", this.state.page);
+    // console.log("BUTTON+1 ", this.state.page);
+    console.log("BUTTON+1 ", page);
   };
 
-  toggleModal = (e) => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }));
+  const toggleModal = (e) => {
+    // this.setState(({ showModal }) => ({
+    //   showModal: !showModal,
+    // }));
+    setShowModal(!showModal);
   };
 
-  imgInfo = (e) => {
+  const imgInfo = (e) => {
     const altImg = e.currentTarget.getAttribute("alt");
     const largeImg = e.currentTarget.getAttribute("largeimageurl");
 
-    this.setState({
-      largeImageURL: largeImg,
-      alt: altImg,
-    });
+    // this.setState({
+    //   largeImageURL: largeImg,
+    //   alt: altImg,
+    // });
+
+    setLargeImageURL(largeImg);
+    setAlt(altImg);
   };
 
-  lastImagesInDB = () => {
-    const arrL = this.state.arrayLength;
+  const lastImagesInDB = () => {
+    const arrL = arrayLength;
 
     if (arrL !== 12) {
       toast.warn("No more images in DataBase!!!", {
@@ -158,59 +206,61 @@ export default class App extends React.Component {
         icon: "🚀",
         position: "top-right",
       });
-      console.log("this.lastImagesInDB");
+      console.log("arrLength", arrL);
+      console.log("lastImagesInDB");
       return;
     }
   };
 
-  reset = () => {
-    this.setState({
-      imageData: [],
-      page: 1,
-      searchQuery: "",
-      error: null,
-      // id: "",
-      // webformatURL: "",
-      // largeImageURL: "",
-    });
+  const reset = () => {
+    // this.setState({
+    //   imageData: [],
+    //   page: 1,
+    //   searchQuery: "",
+    //   error: null,
+    //   // id: "",
+    //   // webformatURL: "",
+    //   // largeImageURL: "",
+    // });
+
+    setImageData([]);
+    setPage(1);
+    setSearchQuerySt("");
+    setError(null);
   };
 
-  render() {
-    console.log("App this.state", this.state);
-    const { showModal, largeImageURL, alt, imageData, loading, arrayLength } =
-      this.state;
+  // console.log("App this.state", this.state);
+  // const { showModal, largeImageURL, alt, imageData, loading, arrayLength } =
+  //   this.state;
 
-    return (
-      <div className="App">
-        {showModal && (
-          <Modal showModal={this.toggleModal}>
-            <img src={largeImageURL} alt={alt} />
-          </Modal>
-        )}
+  return (
+    <div className="App">
+      {showModal && (
+        <Modal showModal={toggleModal}>
+          <img src={largeImageURL} alt={alt} />
+        </Modal>
+      )}
 
-        <Searchbar onSubmit={this.formSubmitHandler} />
+      <Searchbar onSubmit={formSubmitHandler} />
 
-        {imageData.length > 0 && (
-          <ImageGallery
-            imageData={imageData}
-            showModal={this.toggleModal}
-            imgInfo={this.imgInfo}
-          ></ImageGallery>
-        )}
+      {imageData.length > 0 && (
+        <ImageGallery
+          imageData={imageData}
+          showModal={toggleModal}
+          imgInfo={imgInfo}
+        ></ImageGallery>
+      )}
 
-        {loading && <Loader loading={loading} />}
+      {loading && <Loader loading={loading} />}
 
-        {imageData && arrayLength === 12 && (
-          <Button onClick={this.loadMoreImages} />
-        )}
+      {imageData && arrayLength === 12 && <Button onClick={loadMoreImages} />}
 
-        <ToastContainer
-          autoClose={1500}
-          theme="colored"
-          position="top-right"
-          icon="🚀"
-        />
-      </div>
-    );
-  }
+      <ToastContainer
+        autoClose={1500}
+        theme="colored"
+        position="top-right"
+        icon="🚀"
+      />
+    </div>
+  );
 }
