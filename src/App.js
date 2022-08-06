@@ -138,19 +138,22 @@ export default function App() {
         return Promise.reject(new Error(`No images with ${"newSearch"}`));
       })
       .then((data) => {
-        this.setState((prevState) => ({
-          fetchData: data,
-          imageData: [
-            ...prevState.imageData,
-            ...data.hits.map(({ id, webformatURL, tags, largeImageURL }) => ({
-              id: id,
-              webformatURL: webformatURL,
-              tags: tags,
-              largeImageURL: largeImageURL,
-            })),
-          ],
-          setArrayLength: data.hits.length,
-        }));
+        console.log("data", data);
+        console.log("arrayLength", data.hits.length);
+        setArrayLength(data.hits.length);
+        // this.setState((prevState) => ({
+        //   fetchData: data,
+        //   imageData: [
+        //     ...prevState.imageData,
+        //     ...data.hits.map(({ id, webformatURL, tags, largeImageURL }) => ({
+        //       id: id,
+        //       webformatURL: webformatURL,
+        //       tags: tags,
+        //       largeImageURL: largeImageURL,
+        //     })),
+        //   ],
+        //   arrayLength: data.hits.length,
+        // }));
       })
       .catch((error) => {
         // this.setState({ error });
@@ -207,7 +210,7 @@ export default function App() {
         position: "top-right",
       });
       console.log("arrLength", arrL);
-      console.log("lastImagesInDB");
+      console.log("...lastImagesInDB...");
       return;
     }
   };
