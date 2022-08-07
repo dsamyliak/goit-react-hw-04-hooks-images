@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./Searchbar.css";
 import { nanoid } from "nanoid";
-import propTypes from "prop-types";
+// import propTypes from "prop-types";
 import { toast } from "react-toastify";
 
 // class Searchbar extends React.Component {
@@ -21,7 +21,7 @@ export default function Searchbar({ onSubmit }) {
   // };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.currentTarget;
+    const { value } = e.currentTarget;
     // this.setState({ [name]: value });
     setSearchQuery(value);
   };

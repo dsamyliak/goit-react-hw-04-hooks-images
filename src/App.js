@@ -29,55 +29,12 @@ export default function App() {
   const [largeImageURL, setLargeImageURL] = useState("");
   const [alt, setAlt] = useState("");
   const [arrayLength, setArrayLength] = useState(0);
-
-  // componentDidMount() {
-  //   console.log("App DidMount");
-
-  //   window.addEventListener("keydown", this.handleAltSpaceDown);
-  // }
-
-  // componentWillUnmount() {
-  //   console.log("App WillUnMount");
-  //   window.removeEventListener("keydown", this.handleAltSpaceDown);
-  // }
-
-  // handleAltSpaceDown = (e) => {
-  //   console.log("keydown e.code ", e.code);
-
-  //   if (this.state.searchQuery !== "") {
-  //     if (e.altKey && e.code === "Space") {
-  //       console.log("MetaLeft pressed");
-  //       this.loadMoreImages();
-  //     }
-  //   }
-  // };
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   console.log("COMPONENT DIDUPDATE");
-
-  //   const oldQuery = prevState.searchQuery;
-  //   const newQuery = this.state.searchQuery;
-
-  //   if (oldQuery !== newQuery) {
-  //     console.clear();
-  //     this.fetchArray();
-  //   }
-
-  //   const oldPage = prevState.page;
-  //   const newPage = this.state.page;
-
-  //   if (oldPage !== newPage) {
-  //     this.fetchArray();
-  //   }
-  // }
+  const [fetchData, setFetchData] = useState([]);
 
   // componentDidUpdate
   useEffect(() => {
     console.log("COMPONENT DIDUPDATE");
-    if (!searchQuerySt) {
-      return;
-    }
-    console.log("searchQuerySt", searchQuerySt);
+
     // const oldQuery = prevState.searchQuerySt;
     // const newQuery = searchQuerySt;
 
@@ -91,7 +48,70 @@ export default function App() {
     // if (oldPage !== newPage) {
     //   fetchArray();
     // }
-    fetchArray();
+
+    if (!searchQuerySt) {
+      return;
+    }
+    console.log("searchQuerySt", searchQuerySt);
+
+    fetchArray({ searchQuerySt, page })
+      .then((data) => {
+        console.log("data", data);
+
+        setArrayLength(data.hits.length);
+        setFetchData(data);
+        setImageData([
+          ...imageData,
+          ...data.hits.map(({ id, webformatURL, tags, largeImageURL }) => ({
+            id: id,
+            webformatURL: webformatURL,
+            tags: tags,
+            largeImageURL: largeImageURL,
+          })),
+        ]);
+
+        let arrayLengthFetch = data.hits.length;
+        lastImagesInDB(arrayLengthFetch);
+        setLoading(false);
+
+        console.log(
+          "data.hits.length",
+          data.hits.length,
+          "arrayLengthF",
+          arrayLengthFetch
+        );
+      })
+      .catch((error) => {
+        // this.setState({ error });
+        setError({ error });
+        toast.error(`${error}`, {
+          theme: "colored",
+          position: "top-right",
+        });
+      });
+    // .finally((arrayLength) => {
+    //   lastImagesInDB(arrayLength);
+    //   // this.setState({ loading: false });
+    //   setLoading(false);
+    // });
+    // .then((data) => {
+    //   console.log("data", data);
+    //   console.log("arrayLength", data.hits.length);
+
+    // this.setState((prevState) => ({
+    //   fetchData: data,
+    //   imageData: [
+    //     ...prevState.imageData,
+    //     ...data.hits.map(({ id, webformatURL, tags, largeImageURL }) => ({
+    //       id: id,
+    //       webformatURL: webformatURL,
+    //       tags: tags,
+    //       largeImageURL: largeImageURL,
+    //     })),
+    //   ],
+    //   arrayLength: data.hits.length,
+    // }));
+    // })
   }, [searchQuerySt, page]);
 
   const formSubmitHandler = (searchQuery) => {
@@ -122,62 +142,59 @@ export default function App() {
     // }
   };
 
-  const fetchArray = () => {
+  const fetchArray = async () => {
     // const { searchQuery, page } = this.state;
     // this.setState({ loading: true });
     setLoading(true);
 
-    fetch(
+    const response = await fetch(
       `https://pixabay.com/api/?q=${searchQuerySt}&page=${page}&key=3705719-850a353db1ffe60c326d386e6&image_type=photo&orientation=horizontal&per_page=12`
-    )
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-
-        return Promise.reject(new Error(`No images with ${"newSearch"}`));
-      })
-      .then((data) => {
-        console.log("data", data);
-        console.log("arrayLength", data.hits.length);
-        setArrayLength(data.hits.length);
-        // this.setState((prevState) => ({
-        //   fetchData: data,
-        //   imageData: [
-        //     ...prevState.imageData,
-        //     ...data.hits.map(({ id, webformatURL, tags, largeImageURL }) => ({
-        //       id: id,
-        //       webformatURL: webformatURL,
-        //       tags: tags,
-        //       largeImageURL: largeImageURL,
-        //     })),
-        //   ],
-        //   arrayLength: data.hits.length,
-        // }));
-      })
-      .catch((error) => {
-        // this.setState({ error });
-        setError({ error });
-        toast.error(`${error}`, {
-          theme: "colored",
-          position: "top-right",
-        });
-      })
-      .finally(() => {
-        lastImagesInDB();
-        // this.setState({ loading: false });
-        setLoading(false);
-      });
+    );
+    if (response.ok) {
+      return response.json();
+    }
+    return await Promise.reject(new Error(`No images with ${"newSearch"}`));
+    // .then((data) => {
+    //   console.log("data", data);
+    //   console.log("arrayLength", data.hits.length);
+    //   setArrayLength(data.hits.length);
+    // this.setState((prevState) => ({
+    //   fetchData: data,
+    //   imageData: [
+    //     ...prevState.imageData,
+    //     ...data.hits.map(({ id, webformatURL, tags, largeImageURL }) => ({
+    //       id: id,
+    //       webformatURL: webformatURL,
+    //       tags: tags,
+    //       largeImageURL: largeImageURL,
+    //     })),
+    //   ],
+    //   arrayLength: data.hits.length,
+    // }));
+    // })
+    // .catch((error) => {
+    //   // this.setState({ error });
+    //   setError({ error });
+    //   toast.error(`${error}`, {
+    //     theme: "colored",
+    //     position: "top-right",
+    //   });
+    // })
+    // .finally(() => {
+    //   lastImagesInDB();
+    //   // this.setState({ loading: false });
+    //   setLoading(false);
+    // });
   };
 
-  const loadMoreImages = (prevState) => {
+  const loadMoreImages = () => {
     // this.setState((prevState) => ({
     //   page: prevState.page + 1,
     // }));
-    setPage(prevState + 1);
 
-    // console.log("BUTTON+1 ", this.state.page);
+    setPage((page) => page + 1);
     console.log("BUTTON+1 ", page);
+    // console.log("BUTTON+1 ", this.state.page);
   };
 
   const toggleModal = (e) => {
@@ -200,16 +217,14 @@ export default function App() {
     setAlt(altImg);
   };
 
-  const lastImagesInDB = () => {
-    const arrL = arrayLength;
-
-    if (arrL !== 12) {
+  const lastImagesInDB = (arrayLengthFetch) => {
+    if (arrayLengthFetch !== 12) {
       toast.warn("No more images in DataBase!!!", {
         theme: "colored",
         icon: "🚀",
         position: "top-right",
       });
-      console.log("arrLength", arrL);
+      console.log("arrayLengthFetch", arrayLengthFetch);
       console.log("...lastImagesInDB...");
       return;
     }
