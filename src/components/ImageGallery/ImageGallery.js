@@ -1,26 +1,24 @@
 import React from "react";
-import "./ImageGallery.css";
+import css from "./ImageGallery.module.css";
 import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
 import { nanoid } from "nanoid";
 import propTypes from "prop-types";
 
 const ImageGallery = ({ imageData, imgInfo, showModal }) => {
   return (
-    <>
-      <ul className="ImageGallery">
-        {imageData.map(({ id, webformatURL, tags, largeImageURL }) => (
-          <ImageGalleryItem
-            id={id}
-            key={nanoid()}
-            webformaturl={webformatURL}
-            tags={tags}
-            largeimageurl={largeImageURL}
-            imgInfo={imgInfo}
-            showModal={showModal}
-          ></ImageGalleryItem>
-        ))}
-      </ul>
-    </>
+    <ul className={css.ImageGallery}>
+      {imageData.map(({ id, webformatURL, tags, largeImageURL }) => (
+        <ImageGalleryItem
+          id={id}
+          key={nanoid()}
+          webformaturl={webformatURL}
+          tags={tags}
+          largeimageurl={largeImageURL}
+          imgInfo={imgInfo}
+          showModal={showModal}
+        ></ImageGalleryItem>
+      ))}
+    </ul>
   );
 };
 

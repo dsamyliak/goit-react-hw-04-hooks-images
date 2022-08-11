@@ -1,10 +1,10 @@
 import React from "react";
-import "./Loader.css";
+import css from "./Loader.module.css";
 import { Watch } from "react-loader-spinner";
 import propTypes from "prop-types";
 
 const Loader = ({ loading }) => (
-  <div className="LoaderItem">
+  <div className={css.LoaderItem}>
     <Watch
       visible={loading}
       heigth="100"

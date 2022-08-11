@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
-import "./Modal.css";
+import css from "./Modal.module.css";
 
 const modalRoot = document.querySelector("#modal-root");
 
@@ -27,7 +27,7 @@ export default function Modal({ showModal, children }) {
 
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [showModal]);
 
   // componentDidUpdate() {
   //   console.log("Update Modal");
@@ -47,8 +47,8 @@ export default function Modal({ showModal, children }) {
   };
 
   return createPortal(
-    <div className="Overlay" onClick={handleBackdropClick}>
-      <div className="Modal">{children}</div>
+    <div className={css.Overlay} onClick={handleBackdropClick}>
+      <div className={css.Modal}>{children}</div>
     </div>,
     modalRoot
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import "./ImageGalleryItem.css";
+import css from "./ImageGalleryItem.module.css";
 import propTypes from "prop-types";
 
 const ImageGalleryItem = ({
@@ -11,17 +11,15 @@ const ImageGalleryItem = ({
   imgInfo,
 }) => {
   return (
-    <>
-      <li className="ImageGalleryItem" id={id} onClick={showModal}>
-        <img
-          className="ImageGalleryItem-image"
-          src={webformaturl}
-          alt={tags}
-          largeimageurl={largeimageurl}
-          onClick={imgInfo}
-        />
-      </li>
-    </>
+    <li className={css.ImageGalleryItem} id={id} onClick={showModal}>
+      <img
+        className={css.ImageGalleryItemImage}
+        src={webformaturl}
+        alt={tags}
+        largeimageurl={largeimageurl}
+        onClick={imgInfo}
+      />
+    </li>
   );
 };
 

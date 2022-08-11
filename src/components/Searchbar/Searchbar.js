@@ -1,28 +1,15 @@
 import { useState } from "react";
-import "./Searchbar.css";
+import css from "./Searchbar.module.css";
 import { nanoid } from "nanoid";
 // import propTypes from "prop-types";
 import { toast } from "react-toastify";
 
-// class Searchbar extends React.Component {
 export default function Searchbar({ onSubmit }) {
-  // searchQueryId = nanoid();
-  const [searchQueryId, setSearchQueryId] = useState(nanoid());
   const [searchQuery, setSearchQuery] = useState("");
-
-  // static propTypes = {
-  //   state: propTypes.shape({
-  //     searchQuery: propTypes.string.isRequired,
-  //   }),
-  // };
-
-  // state = {
-  //   searchQuery: "",
-  // };
 
   const handleInputChange = (e) => {
     const { value } = e.currentTarget;
-    // this.setState({ [name]: value });
+
     setSearchQuery(value);
   };
 
@@ -39,28 +26,25 @@ export default function Searchbar({ onSubmit }) {
   };
 
   const reset = () => {
-    // this.setState({
-    //   searchQuery: "",
-    // });
     setSearchQuery("");
   };
 
   return (
-    <header className="Searchbar">
-      <form className="SearchForm" onSubmit={handleSubmit}>
-        <button type="submit" className="SearchForm-button">
-          <span className="SearchForm-button-label">Search</span>
+    <header className={css.Searchbar}>
+      <form className={css.SearchForm} onSubmit={handleSubmit}>
+        <button type="submit" className={css.SearchFormButton}>
+          <span className={css.SearchFormButtonLabel}>Search</span>
         </button>
-        <label htmlFor={searchQueryId}>
+        <label htmlFor={nanoid()}>
           <input
-            className="SearchForm-input"
+            className={css.SearchFormInput}
             type="text"
             autoComplete="off"
             autoFocus
             //   pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             //   title="Name may contain only letters, apostrophe, dash and spaces. For example Cat, Architecture"
             //   required
-            id={searchQueryId}
+            id={nanoid()}
             // name="searchQuery"
             value={searchQuery}
             onChange={handleInputChange}
@@ -71,5 +55,3 @@ export default function Searchbar({ onSubmit }) {
     </header>
   );
 }
-
-// export default Searchbar;
