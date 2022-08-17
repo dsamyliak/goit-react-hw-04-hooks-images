@@ -4,20 +4,20 @@ import propTypes from "prop-types";
 
 const ImageGalleryItem = ({
   id,
-  showModal,
+  openModal,
   webformaturl,
   tags,
   largeimageurl,
-  imgInfo,
+  modalInfo,
 }) => {
   return (
-    <li className={css.ImageGalleryItem} id={id} onClick={showModal}>
+    <li className={css.ImageGalleryItem} id={id} onClick={openModal}>
       <img
         className={css.ImageGalleryItemImage}
         src={webformaturl}
         alt={tags}
         largeimageurl={largeimageurl}
-        onClick={imgInfo}
+        onClick={modalInfo}
       />
     </li>
   );

@@ -1,7 +1,7 @@
 import css from "./App.module.css";
 import { useState, useEffect } from "react";
 import Loader from "../components/Loader";
-import Searchbar from "../components/Searchbar";
+import SearchBar from "../components/SearchBar";
 import ImageGallery from "../components/ImageGallery";
 import Button from "../components/Button/Button";
 import Modal from "../components/Modal/Modal";
@@ -14,10 +14,11 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [images, setImages] = useState([]);
   const [page, setPage] = useState(1);
-  // const [error, setError] = useState(null);
-  const [modal, setModal] = useState(false);
-  const [largeImageURL, setLargeImageURL] = useState("");
-  const [alt, setAlt] = useState("");
+  const [error, setError] = useState(null);
+  const [modal, setModal] = useState({
+    largeImageURL: "",
+    alt: "",
+  });
   const [loading, setLoading] = useState(false);
 
   // componentDidUpdate
@@ -37,7 +38,6 @@ export default function App() {
             largeImageURL: largeImageURL,
           })),
         ]);
-        console.log("images", data.hits);
         lastImagesInDB(data.hits.length);
         setLoading(false);
       })
@@ -61,19 +61,23 @@ export default function App() {
     setSearchQuery(searchQueryBar);
     setPage(1);
     setImages([]);
-    setModal(false);
   };
 
   const loadMoreImages = () => {
     setPage((page) => page + 1);
   };
 
-  const imgInfo = (e) => {
-    const altImg = e.currentTarget.getAttribute("alt");
-    const largeImg = e.currentTarget.getAttribute("largeimageurl");
-
-    setLargeImageURL(largeImg);
-    setAlt(altImg);
+  const openModal = (e) => {
+    setModal({
+      largeImageURL: e.currentTarget.getAttribute("largeimageurl"),
+      alt: e.currentTarget.getAttribute("alt"),
+    });
+  };
+  const closeModal = (e) => {
+    setModal({
+      largeImageURL: "",
+      alt: "",
+    });
   };
 
   const lastImagesInDB = (arrayLengthFetch) => {
@@ -84,30 +88,25 @@ export default function App() {
         position: "top-right",
       });
 
-      console.log("...lastImagesInDB...");
       return arrayLengthFetch;
     }
   };
 
-  console.log("imagesLength", images.length);
-  console.log("pagesLength", page);
-  console.log("arrayLength", images.length / page);
-
   return (
     <div className={css.App}>
-      {modal && (
-        <Modal closeModal={() => setModal(!modal)}>
-          <img src={largeImageURL} alt={alt} />
+      {modal.largeImageURL.length > 0 && (
+        <Modal closeModal={() => closeModal()}>
+          <img src={modal.largeImageURL} alt={modal.alt} />
         </Modal>
       )}
 
-      <Searchbar onSubmit={formSubmitHandler} />
+      <SearchBar onSubmit={formSubmitHandler} />
 
       {images.length > 0 && (
         <ImageGallery
           images={images}
-          showModal={() => setModal(!modal)}
-          imgInfo={imgInfo}
+          openModal={() => openModal}
+          modalInfo={openModal}
         ></ImageGallery>
       )}
 

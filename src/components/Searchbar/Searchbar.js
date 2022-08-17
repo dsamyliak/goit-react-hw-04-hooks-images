@@ -1,9 +1,9 @@
 import { useState } from "react";
-import css from "./Searchbar.module.css";
+import css from "./SearchBar.module.css";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 
-export default function Searchbar({ onSubmit }) {
+export default function SearchBar({ onSubmit }) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleInputChange = (e) => {
@@ -29,7 +29,7 @@ export default function Searchbar({ onSubmit }) {
   };
 
   return (
-    <header className={css.Searchbar}>
+    <header className={css.SearchBar}>
       <form className={css.SearchForm} onSubmit={handleSubmit}>
         <button type="submit" className={css.SearchFormButton}>
           <span className={css.SearchFormButtonLabel}>Search</span>
@@ -40,10 +40,10 @@ export default function Searchbar({ onSubmit }) {
             type="text"
             autoComplete="off"
             autoFocus
+            id={nanoid()}
             //   pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
             //   title="Name may contain only letters, apostrophe, dash and spaces. For example Cat, Architecture"
             //   required
-            id={nanoid()}
             // name="searchQuery"
             value={searchQuery}
             onChange={handleInputChange}

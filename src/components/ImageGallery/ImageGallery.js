@@ -4,7 +4,7 @@ import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
 import { nanoid } from "nanoid";
 import propTypes from "prop-types";
 
-const ImageGallery = ({ images, imgInfo, showModal }) => {
+const ImageGallery = ({ images, modalInfo, openModal }) => {
   return (
     <ul className={css.ImageGallery}>
       {images.map(({ id, webformatURL, tags, largeImageURL }) => (
@@ -14,8 +14,8 @@ const ImageGallery = ({ images, imgInfo, showModal }) => {
           webformaturl={webformatURL}
           tags={tags}
           largeimageurl={largeImageURL}
-          imgInfo={imgInfo}
-          showModal={showModal}
+          modalInfo={modalInfo}
+          openModal={openModal}
         ></ImageGalleryItem>
       ))}
     </ul>
