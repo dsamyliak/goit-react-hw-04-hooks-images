@@ -8,28 +8,28 @@ import Modal from "../components/Modal/Modal";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
+import fetchImages from "./services";
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [imageData, setImageData] = useState([]);
+  const [images, setImages] = useState([]);
   const [page, setPage] = useState(1);
-  const [showModal, setShowModal] = useState(false);
-  const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState(null);
+  const [modal, setModal] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState("");
   const [alt, setAlt] = useState("");
-  const [arrayLength, setArrayLength] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   // componentDidUpdate
   useEffect(() => {
     if (!searchQuery) {
       return;
     }
-
+    setLoading(true);
     fetchImages({ searchQuery, page })
       .then((data) => {
-        setArrayLength(data.hits.length);
-        setImageData([
-          ...imageData,
+        setImages([
+          ...images,
           ...data.hits.map(({ id, webformatURL, tags, largeImageURL }) => ({
             id: id,
             webformatURL: webformatURL,
@@ -37,7 +37,7 @@ export default function App() {
             largeImageURL: largeImageURL,
           })),
         ]);
-        console.log("imageData", imageData);
+        console.log("images", data.hits);
         lastImagesInDB(data.hits.length);
         setLoading(false);
       })
@@ -60,28 +60,12 @@ export default function App() {
 
     setSearchQuery(searchQueryBar);
     setPage(1);
-    setImageData([]);
-    setShowModal(false);
-  };
-
-  const fetchImages = async () => {
-    setLoading(true);
-
-    const response = await fetch(
-      `https://pixabay.com/api/?q=${searchQuery}&page=${page}&key=3705719-850a353db1ffe60c326d386e6&image_type=photo&orientation=horizontal&per_page=12`
-    );
-    if (response.ok) {
-      return response.json();
-    }
-    return await Promise.reject(new Error(`No images with ${"newSearch"}`));
+    setImages([]);
+    setModal(false);
   };
 
   const loadMoreImages = () => {
     setPage((page) => page + 1);
-  };
-
-  const toggleModal = (e) => {
-    setShowModal(!showModal);
   };
 
   const imgInfo = (e) => {
@@ -99,34 +83,39 @@ export default function App() {
         icon: "🚀",
         position: "top-right",
       });
-      console.log("arrayLengthFetch", arrayLengthFetch);
+
       console.log("...lastImagesInDB...");
       return arrayLengthFetch;
     }
   };
-  console.log("imageDataLength", imageData.length);
+
+  console.log("imagesLength", images.length);
+  console.log("pagesLength", page);
+  console.log("arrayLength", images.length / page);
 
   return (
     <div className={css.App}>
-      {showModal && (
-        <Modal showModal={toggleModal}>
+      {modal && (
+        <Modal closeModal={() => setModal(!modal)}>
           <img src={largeImageURL} alt={alt} />
         </Modal>
       )}
 
       <Searchbar onSubmit={formSubmitHandler} />
 
-      {imageData.length > 0 && (
+      {images.length > 0 && (
         <ImageGallery
-          imageData={imageData}
-          showModal={toggleModal}
+          images={images}
+          showModal={() => setModal(!modal)}
           imgInfo={imgInfo}
         ></ImageGallery>
       )}
 
       {loading && <Loader loading={loading} />}
 
-      {imageData && arrayLength === 12 && <Button onClick={loadMoreImages} />}
+      {images && images.length / page === 12 && images.length <= 500 && (
+        <Button onClick={loadMoreImages} />
+      )}
 
       <ToastContainer
         autoClose={1500}

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import css from "./Searchbar.module.css";
 import { nanoid } from "nanoid";
-// import propTypes from "prop-types";
 import { toast } from "react-toastify";
 
 export default function Searchbar({ onSubmit }) {
