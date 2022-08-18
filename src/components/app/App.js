@@ -1,14 +1,14 @@
 import css from "./App.module.css";
 import { useState, useEffect } from "react";
-import Loader from "../components/Loader";
-import SearchBar from "../components/SearchBar";
-import ImageGallery from "../components/ImageGallery";
-import Button from "../components/Button/Button";
-import Modal from "../components/Modal/Modal";
+import Loader from "../Loader";
+import SearchBar from "../SearchBar";
+import ImageGallery from "../ImageGallery";
+import Button from "../Button";
+import Modal from "../Modal";
+import fetchImages from "../services/fetchImages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { toast } from "react-toastify";
-import fetchImages from "./services";
 
 export default function App() {
   const [searchQuery, setSearchQuery] = useState("");
